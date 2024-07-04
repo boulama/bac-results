@@ -1,16 +1,36 @@
-# This is a sample Python script.
+import json
+import random
+from time import sleep
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+from tqdm import tqdm
+from extractor.extract import BacStatsFetcher, StatisticsProcessor, DataExtractor, DataVisualizer
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def main():
+    fetcher = BacStatsFetcher()
+    processor = StatisticsProcessor()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    with open('extractor/juries.json', 'r') as f:
+        all_jurys = json.load(f)
+
+    for jury in tqdm(all_jurys):
+        try:
+            stats = fetcher.get_stats(jury['value'])
+            data = DataExtractor.extract_data(stats.text)
+            processor.process_jury(data)
+
+            with open('stats.json', 'a') as append_file: # save just in case
+                json.dump(data, append_file)
+                append_file.write(',\n')
+        except Exception as e:
+            print(f'Could not get data for jury {jury["label"]} ({jury["value"]}): {e}')
+        sleep(random.choice(range(4)))
+
+    processor.save_results()
+    print('Statistics appended to juries.json')
+
+    DataVisualizer.plot_pie_chart(processor.totals)
+
+
+if __name__ == "__main__":
+    main()

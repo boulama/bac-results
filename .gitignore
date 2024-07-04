@@ -1,2 +1,6 @@
 .env
 venv
+stats.json
+stats_final.json
+tallies.json
+.idea

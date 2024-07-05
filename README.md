@@ -11,6 +11,38 @@ Le site officiel du Baccalauréat 2024 du Niger (https://www.officebacniger.com/
 - Visualisations des résultats globaux
 - Sauvegarde des données extraites pour une analyse ultérieure
 
+## Méthode d'Extraction et d'Analyse
+
+L'extracteur et l'analyseur fonctionnent selon le processus suivant :
+
+1. **Extraction des Données**
+   - L'outil simule des requêtes HTTP vers le site officiel pour chaque jury.
+   - Il utilise les cookies et tokens d'authentification pour accéder aux pages de statistiques.
+   - Les requêtes sont espacées aléatoirement pour éviter de surcharger le serveur.
+
+2. **Parsing des Données**
+   - Le HTML de chaque page de jury est analysé avec BeautifulSoup.
+   - Les informations clés (nom du jury, données du tableau, données graphiques) sont extraites.
+
+3. **Traitement des Statistiques**
+   - Les données de chaque jury sont agrégées.
+   - Des totaux sont calculés pour différentes catégories (admis, second groupe, refusés, absents).
+   - Des statistiques détaillées sont compilées, incluant la répartition par genre.
+
+4. **Stockage des Données**
+   - Les données brutes et traitées sont sauvegardées en format JSON.
+   - `stats_final.json` contient les données détaillées de tous les jurys.
+   - `tallies.json` contient les statistiques agrégées par jury.
+
+5. **Visualisation**
+   - Un graphique circulaire est généré pour représenter la répartition globale des résultats.
+
+6. **Analyse**
+   - Les données agrégées permettent une analyse approfondie des résultats :
+     - Taux de réussite global et par jury
+     - Répartition des résultats par genre
+     - Comparaison entre différents jurys ou régions
+
 ## Prérequis
 
 - Python 3.6 ou supérieur
